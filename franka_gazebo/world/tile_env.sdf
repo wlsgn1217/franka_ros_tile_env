@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="tile_env">
+    <!--A global light source-->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!--A ground plane-->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <!-- A Table -->
+    <include>
+      <uri>model://table_tile_env</uri>
+      <pose>-0.2 0.0 0.2 0 -0 0</pose>
+      <static>1</static>
+    </include>
+    <!--A Passive Tile-->
+    <include>
+      <uri>model://passive_tile</uri>
+      <pose>0.0 0.0 0.4 0 0 -1.57079632679</pose>
+      <static>1</static>
+    </include>
+  </world>
+</sdf>

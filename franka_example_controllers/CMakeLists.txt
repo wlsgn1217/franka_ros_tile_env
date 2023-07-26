@@ -36,6 +36,7 @@ list_insert_in_workspace_order(catkin_INCLUDE_DIRS ${Franka_INCLUDE_DIRS} ${catk
 
 add_message_files(FILES
   JointTorqueComparison.msg
+  Observation.msg
 )
 
 generate_messages()
@@ -68,6 +69,7 @@ catkin_package(
     roscpp
     urdf
     visualization_msgs
+    gazebo_msgs
   DEPENDS Franka
 )
 
@@ -144,7 +146,7 @@ install(FILES franka_example_controllers_plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 catkin_install_python(
-  PROGRAMS scripts/interactive_marker.py scripts/move_to_start.py scripts/dual_arm_interactive_marker.py
+  PROGRAMS scripts/interactive_marker.py scripts/move_to_start.py scripts/dual_arm_interactive_marker.py scripts/manipulation_policy.py scripts/manipulation_policy_new.py scripts/manipulation_policy_nn.py scripts/recorder.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

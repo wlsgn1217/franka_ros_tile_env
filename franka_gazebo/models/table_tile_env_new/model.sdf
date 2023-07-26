@@ -1,0 +1,34 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='table_tile_env_new'>
+    <link name='link'>
+      <visual name='visual'>
+        <geometry>
+          <box>
+            <size>0.8 1.5 0.15</size>
+          </box>
+        </geometry>
+        <transparency>0.3</transparency>
+      </visual>
+      <collision name='collision'>
+        <geometry>
+          <box>
+            <size>0.8 1.5 0.15</size>
+          </box>
+        </geometry>
+        <surface>
+          <ode>
+            <mu>0.4</mu>
+            <mu2>0.4</mu2>
+            <slip1>1000000</slip1>
+            <slip2>1000000</slip2>
+          </ode>
+          <torsional>
+            <coefficient>0</coefficient>
+          </torsional>
+        </surface>
+      </collision>
+    </link>
+    <static>1</static>
+  </model>
+</sdf>

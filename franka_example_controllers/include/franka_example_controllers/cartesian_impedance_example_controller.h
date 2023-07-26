@@ -20,6 +20,11 @@
 #include <franka_hw/franka_model_interface.h>
 #include <franka_hw/franka_state_interface.h>
 
+#include <franka_msgs/SetEEFrame.h>
+#include <boost/array.hpp>
+#include <std_msgs/Float32MultiArray.h>
+
+
 namespace franka_example_controllers {
 
 class CartesianImpedanceExampleController : public controller_interface::MultiInterfaceController<
@@ -45,6 +50,7 @@ class CartesianImpedanceExampleController : public controller_interface::MultiIn
   double nullspace_stiffness_{20.0};
   double nullspace_stiffness_target_{20.0};
   const double delta_tau_max_{1.0};
+
   Eigen::Matrix<double, 6, 6> cartesian_stiffness_;
   Eigen::Matrix<double, 6, 6> cartesian_stiffness_target_;
   Eigen::Matrix<double, 6, 6> cartesian_damping_;
@@ -56,6 +62,22 @@ class CartesianImpedanceExampleController : public controller_interface::MultiIn
   Eigen::Vector3d position_d_target_;
   Eigen::Quaterniond orientation_d_target_;
 
+  // Admittance
+  double admittance_translational_stiffness_{50};
+  double admittance_rotational_stiffness_{3};
+  double admittance_translational_damping_{10};
+  double admittance_rotational_damping_{3};
+  double admittance_translational_mass_{0.002};
+  double admittance_rotational_mass_{0.002};
+
+
+
+  Eigen::Matrix<double, 6, 6> admittance_mass_;
+  Eigen::Matrix<double, 6, 6> admittance_stiffness_;
+  Eigen::Matrix<double, 6, 6> admittance_damping_;
+  Eigen::Matrix<double, 6, 6> admittance_stiffness_target_;
+  Eigen::Matrix<double, 6, 6> admittance_damping_target_;
+
   // Dynamic reconfigure
   std::unique_ptr<dynamic_reconfigure::Server<franka_example_controllers::compliance_paramConfig>>
       dynamic_server_compliance_param_;
@@ -66,6 +88,10 @@ class CartesianImpedanceExampleController : public controller_interface::MultiIn
   // Equilibrium pose subscriber
   ros::Subscriber sub_equilibrium_pose_;
   void equilibriumPoseCallback(const geometry_msgs::PoseStampedConstPtr& msg);
+
+  // Publish Observation: 
+  ros::Publisher pub_observation_;
+  std_msgs::Float32MultiArray obs;
 };
 
 }  // namespace franka_example_controllers

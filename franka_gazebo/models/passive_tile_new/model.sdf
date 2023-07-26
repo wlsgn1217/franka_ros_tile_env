@@ -1,0 +1,115 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='passive_tile_new'>
+    <link name="empty_tile">
+      <visual name='bot_tile'>
+        <pose>0 0 0 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Bot_Collision_0mm/TileHand_Bot_Collision.obj</uri></mesh>
+        </geometry>
+        <transparency>0.9</transparency>
+      </visual>
+
+      <visual name='top_tile'>
+        <pose>0 0 0.03 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Top_Collision_0mm/TileHand_Top_Collision.obj</uri></mesh>
+        </geometry>
+        <transparency>0.9</transparency>
+      </visual>
+
+      <visual name="visual_bot1">
+        <pose>0.086602540378 0.15  0 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Bot_Collision_0mm/TileHand_Bot_Collision.obj</uri></mesh>
+        </geometry>
+        <transparency>0.2</transparency>
+      </visual>
+      <visual name="visual_top1">
+        <pose>0.086602540378 0.15 0.03 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Top_Collision_0mm/TileHand_Top_Collision.obj</uri></mesh>
+        </geometry>
+        <transparency>0.2</transparency>
+      </visual>
+
+
+
+      <visual name="visual_bot2">
+        <pose>0.086602540378 -0.15 0 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Bot_Collision_0mm/TileHand_Bot_Collision.obj</uri></mesh>
+        </geometry>
+        <transparency>0.2</transparency>
+      </visual>
+
+      <visual name="visual_top2">
+        <pose>0.086602540378 -0.15 0.03 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Top_Collision_0mm/TileHand_Top_Collision.obj</uri></mesh>
+        </geometry>
+        <transparency>0.2</transparency>
+      </visual>
+
+
+      <visual name="visual_bot3">
+        <pose>0.17320508075 0 0 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Bot_Collision_0mm/TileHand_Bot_Collision.obj</uri></mesh>
+        </geometry>
+        <transparency>0.2</transparency>
+      </visual>
+
+      <visual name="visual_top3">
+        <pose>0.17320508075 0 0.03 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Top_Collision_0mm/TileHand_Top_Collision.obj</uri></mesh>
+        </geometry>
+        <transparency>0.2</transparency>
+      </visual>
+
+      <!-- <collision name="collision_bot1">
+        <pose>0.086602540378 0.15 0 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Bot_Collision_0mm/TileHand_Bot_Collision.obj</uri></mesh>
+        </geometry>
+      </collision>
+      <collision name="collision_top1">
+        <pose>0.086602540378 0.15 0.03 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Top_Collision_0mm/TileHand_Top_Collision.obj</uri></mesh>
+        </geometry>
+      </collision>
+
+      <collision name="collision_bot2">
+        <pose>0.086602540378 -0.15 0 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Bot_Collision_0mm/TileHand_Bot_Collision.obj</uri></mesh>
+        </geometry>
+      </collision>
+      <collision name="collision_top2">
+        <pose>0.086602540378 -0.15 0.03 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Top_Collision_0mm/TileHand_Top_Collision.obj</uri></mesh>
+        </geometry>
+      </collision>
+
+      <collision name="collision_bot3">
+        <pose>0.17320508075 0 0 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Bot_Collision_0mm/TileHand_Bot_Collision.obj</uri></mesh>
+        </geometry>
+      </collision>
+      <collision name="collision_top3">
+        <pose>0.17320508075 0 0.03 1.57079632679 0.0 0.523599</pose>
+        <geometry>
+          <mesh><uri>model://passive_tile_new/meshes/collision/TileHand_Top_Collision_0mm/TileHand_Top_Collision.obj</uri></mesh>
+        </geometry>
+      </collision> -->
+
+
+
+
+    </link>
+  </model>
+</sdf>

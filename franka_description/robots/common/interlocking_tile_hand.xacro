@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="interlocking_tile_hand">
+  <!-- safety_distance: Minimum safety distance in [m] by which the collision volumes are expanded and which is enforced during robot motions -->
+  <xacro:macro name="interlocking_tile_hand" params="connected_to:='' arm_id:='panda' rpy:='0 0 0' xyz:='0 0 0' tcp_xyz:='0 0 0.5' tcp_rpy:='0 0 0' safety_distance:=0 gazebo:=false description_pkg:=franka_description mass:=0.5">
+    <xacro:unless value="${connected_to == ''}">
+      <joint name="${arm_id}_tile_joint" type="fixed">
+        <parent link="${connected_to}" />
+        <child link="${arm_id}_tile" />
+        <origin xyz="${xyz}" rpy="${rpy}" />
+      </joint>
+    </xacro:unless>
+
+
+    <!-- Define the hand_tcp frame -->
+    <link name="${arm_id}_tile_tcp" />
+    <joint name="${arm_id}_tile_tcp_joint" type="fixed">
+      <origin xyz="${tcp_xyz}" rpy="${tcp_rpy}" />
+      <parent link="${arm_id}_tile" />
+      <child link="${arm_id}_tile_tcp" />
+    </joint>
+
+    <link name="${arm_id}_tile">
+        <visual>
+            <origin rpy="0.0 0.0 0.0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/hand_with_interlocking_tile.obj"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin rpy="0.0 0.0 0.0" xyz="0 0.035 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/hand_with_interlocking_tile_top.obj"/>
+            </geometry>
+            <surface>
+              <ode>
+                <mu>0.4</mu>
+                <mu2>0.4</mu2>
+                <slip1>1000000</slip1>
+                <slip2>1000000</slip2>
+              </ode>
+              <torsional>
+                <coefficient>0</coefficient>
+              </torsional>
+            </surface>
+        </collision>
+        <collision>
+            <origin rpy="0.0 0.0 0.0" xyz="0 0.067 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/hand_with_interlocking_tile_bot.obj"/>
+            </geometry>
+            <surface>
+              <ode>
+                <mu>0.4</mu>
+                <mu2>0.4</mu2>
+                <slip1>1000000</slip1>
+                <slip2>1000000</slip2>
+              </ode>
+              <torsional>
+                <coefficient>0</coefficient>
+              </torsional>
+            </surface>
+        </collision>
+        <!-- To do: Define the mass (random? or Fixed?)-->
+        <mass>"${mass}"</mass>
+    </link>
+  </xacro:macro>
+</robot>

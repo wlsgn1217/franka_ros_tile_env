@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="interlocking_tile_hand">
+  <!-- safety_distance: Minimum safety distance in [m] by which the collision volumes are expanded and which is enforced during robot motions -->
+  <xacro:macro name="interlocking_tile_hand" params="connected_to:='' arm_id:='panda' rpy:='0 0 0' xyz:='0 0 0' tcp_xyz:='0 0 0' tcp_rpy:='0 0 0' safety_distance:=0 gazebo:=false description_pkg:=franka_description mass:=0.5">
+    <xacro:unless value="${connected_to == ''}">
+      <joint name="${arm_id}_tile_joint" type="fixed">
+        <parent link="${connected_to}" />
+        <child link="bota_sensor" />
+        <origin xyz="${xyz}" rpy="${rpy}" />
+      </joint>
+    </xacro:unless>
+
+    <link name="bota_sensor">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/mounting.STL"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <joint name="bota_sensor_joint" type="fixed">
+        <parent link="bota_sensor"/>
+        <child link="${arm_id}_hand"/>
+        <origin rpy="0 0 0" xyz="0 0 0.035"/>
+    </joint>
+
+    <xacro:link_with_sc name="hand" gazebo="${gazebo}">
+      <self_collision_geometries>
+        <xacro:collision_capsule xyz="0 0 0.04" direction="y" radius="${0.04+safety_distance}" length="0.1" />
+        <xacro:collision_capsule xyz="0 0 0.10" direction="y" radius="${0.02+safety_distance}" length="0.1" />
+      </self_collision_geometries>
+    </xacro:link_with_sc>
+
+    <!-- <link name="${arm_id}_hand">
+      <visual>
+        <geometry>
+          <mesh filename="package://${description_pkg}/meshes/visual/hand.dae" />
+        </geometry>
+      </visual>
+      <xacro:if value="${gazebo}">
+        <xacro:inertial_props name="hand" />
+      </xacro:if>
+    </link> -->
+
+
+    <link name="${arm_id}_leftfinger">
+      <visual>
+        <geometry>
+          <mesh filename="package://${description_pkg}/meshes/visual/finger.dae" />
+        </geometry>
+      </visual>
+      <!-- screw mount -->
+      <xacro:if value="${gazebo}">
+        <xacro:inertial_props name="leftfinger" />
+      </xacro:if>
+    </link>
+    <link name="${arm_id}_rightfinger">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 ${pi}" />
+        <geometry>
+          <mesh filename="package://${description_pkg}/meshes/visual/finger.dae" />
+        </geometry>
+      </visual>
+      <!-- screw mount -->
+      <xacro:if value="${gazebo}">
+        <xacro:inertial_props name="rightfinger" />
+      </xacro:if>
+    </link>
+    <joint name="${arm_id}_finger_joint1" type="prismatic">
+      <parent link="${arm_id}_hand" />
+      <child link="${arm_id}_leftfinger" />
+      <origin xyz="0 0 0.0584" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+      <limit effort="100" lower="0.0" upper="0.04" velocity="0.2" />
+      <dynamics damping="0.3" />
+    </joint>
+    <joint name="${arm_id}_finger_joint2" type="prismatic">
+      <parent link="${arm_id}_hand" />
+      <child link="${arm_id}_rightfinger" />
+      <origin xyz="0 0 0.0584" rpy="0 0 0" />
+      <axis xyz="0 -1 0" />
+      <limit effort="100" lower="0.0" upper="0.04" velocity="0.2" />
+      <mimic joint="${arm_id}_finger_joint1" />
+      <dynamics damping="0.3" />
+    </joint>
+
+    <joint name="panda_fingertip_centered_joint" type="fixed">
+        <parent link="${arm_id}_hand"/>
+        <child link="${arm_id}_tile"/>
+        <!--0.0584 (franka_hand_length) + 0.04486700 (franka_finger_length) + 0.01760800 * 0.5 (franka_fingerpad_length * 0.5) = 0.112071-->
+        <origin rpy="0 0 0" xyz="0 0 0.112071"/>
+    </joint>
+
+    <link name="${arm_id}_tile">
+        <visual>
+            <origin rpy="${pi/2} 0.0 ${pi/2}" xyz="0 0 -0.03" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/TileHand_Top_Collision_0mm/TileHand_Top_Collision.obj"/>
+            </geometry>
+        </visual>
+        <visual>
+            <origin rpy="${pi/2} 0.0 ${pi/2}" xyz="0 0 0.003" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/TileHand_Bot_Collision_0mm/TileHand_Bot_Collision.obj"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin rpy="${pi/2} 0.0 ${pi/2}" xyz="0 0 -0.03" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/TileHand_Top_Collision_5mm/TileHand_Top_Collision.obj"/>
+            </geometry>
+            <surface>
+              <ode>
+                <mu>0.4</mu>
+                <mu2>0.4</mu2>
+                <slip1>1000000</slip1>
+                <slip2>1000000</slip2>
+              </ode>
+              <torsional>
+                <coefficient>0</coefficient>
+              </torsional>
+            </surface>
+        </collision>
+        <collision>
+            <origin rpy="${pi/2} 0.0 ${pi/2}" xyz="0 0 0.003" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/TileHand_Bot_Collision_5mm/TileHand_Bot_Collision.obj"/>
+            </geometry>
+            <surface>
+              <ode>
+                <mu>0.4</mu>
+                <mu2>0.4</mu2>
+                <slip1>1000000</slip1>
+                <slip2>1000000</slip2>
+              </ode>
+              <torsional>
+                <coefficient>0</coefficient>
+              </torsional>
+            </surface>
+        </collision>
+        <!-- To do: Define the mass (random? or Fixed?)-->
+        <mass>"${mass}"</mass>
+    </link>
+  </xacro:macro>
+</robot>

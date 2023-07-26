@@ -5,10 +5,25 @@
     <xacro:unless value="${connected_to == ''}">
       <joint name="${arm_id}_hand_joint" type="fixed">
         <parent link="${connected_to}" />
-        <child link="${arm_id}_hand" />
+        <child link="$bota_sensor" />
         <origin xyz="${xyz}" rpy="${rpy}" />
       </joint>
     </xacro:unless>
+
+    <link name="bota_sensor">
+        <visual>
+            <origin rpy="-1.57079632679 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/mounting.STL"/>
+            </geometry>
+        </visual>
+    </link>
+    <joint name="bota_sensor_joint" type="fixed">
+        <parent link="bota_sensor"/>
+        <child link="${arm_id}_hand"/>
+        <origin rpy="0 0 0" xyz="0 0 0.035"/>
+    </joint>
+
 
     <xacro:link_with_sc name="hand" gazebo="${gazebo}">
       <self_collision_geometries>

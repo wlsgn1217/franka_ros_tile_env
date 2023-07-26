@@ -42,6 +42,7 @@
         <geometry>
           <mesh filename="package://${description_pkg}/meshes/visual/${name}.dae" />
         </geometry>
+        <transparency>0.3</transparency>
       </visual>
       <collision>
         <geometry>

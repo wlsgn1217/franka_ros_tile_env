@@ -8,12 +8,14 @@
 
 #include <controller_interface/multi_interface_controller.h>
 #include <franka_hw/franka_state_interface.h>
+#include <franka_hw/franka_model_interface.h>
 #include <franka_hw/trigger_rate.h>
 #include <franka_msgs/FrankaState.h>
 #include <geometry_msgs/WrenchStamped.h>
 #include <realtime_tools/realtime_publisher.h>
 #include <sensor_msgs/JointState.h>
 #include <tf2_msgs/TFMessage.h>
+#include <Eigen/Dense>
 
 namespace franka_control {
 
@@ -21,7 +23,8 @@ namespace franka_control {
  * Controller to publish the robot state as ROS topics.
  */
 class FrankaStateController
-    : public controller_interface::MultiInterfaceController<franka_hw::FrankaStateInterface> {
+    : public controller_interface::MultiInterfaceController<franka_hw::FrankaStateInterface,
+                                                            franka_hw::FrankaModelInterface> {
  public:
   /**
    * Creates an instance of a FrankaStateController.
@@ -48,7 +51,7 @@ class FrankaStateController
   void update(const ros::Time& time, const ros::Duration& period) override;
 
  private:
-  void publishFrankaStates(const ros::Time& time);
+  void publishFrankaStates(const ros::Time& time, Eigen::Matrix<double, 6, 1> ee_vel);
   void publishJointStates(const ros::Time& time);
   void publishTransforms(const ros::Time& time);
   void publishExternalWrench(const ros::Time& time);
@@ -56,6 +59,7 @@ class FrankaStateController
   std::string arm_id_;
 
   franka_hw::FrankaStateInterface* franka_state_interface_{};
+
   std::unique_ptr<franka_hw::FrankaStateHandle> franka_state_handle_{};
 
   realtime_tools::RealtimePublisher<tf2_msgs::TFMessage> publisher_transforms_;
@@ -67,6 +71,9 @@ class FrankaStateController
   franka::RobotState robot_state_;
   uint64_t sequence_number_ = 0;
   std::vector<std::string> joint_names_;
+
+
+  std::unique_ptr<franka_hw::FrankaModelHandle> model_handle_;
 };
 
 }  // namespace franka_control

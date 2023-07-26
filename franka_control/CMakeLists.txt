@@ -18,8 +18,10 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   tf2_msgs
   std_srvs
+  eigen_conversions
 )
 
+find_package(Eigen3 REQUIRED)
 find_package(Franka 0.9.0 QUIET)
 if(NOT Franka_FOUND)
   find_package(Franka 0.8.0 REQUIRED)
@@ -42,6 +44,7 @@ catkin_package(
     sensor_msgs
     tf2_msgs
     std_srvs
+    eigen_conversions
   DEPENDS Franka
 )
 

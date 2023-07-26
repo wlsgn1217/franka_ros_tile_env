@@ -24,6 +24,7 @@
   <depend>franka_hw</depend>
   <depend>franka_gripper</depend>
   <depend>geometry_msgs</depend>
+  <depend>gazebo_msgs</depend>
   <depend>hardware_interface</depend>
   <depend>joint_limits_interface</depend>
   <depend>tf</depend>

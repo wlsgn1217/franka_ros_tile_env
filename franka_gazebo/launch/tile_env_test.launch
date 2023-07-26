@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="world"       default="$(find franka_gazebo)/world/tile_env.sdf" doc="Filename to a SDF World for gazebo to use" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world)"/>
+    <!-- Always start in paused mode, and only unpause when spawning the model -->
+    <arg name="paused" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="use_sim_time" value="true"/>
+  </include>
+</launch>

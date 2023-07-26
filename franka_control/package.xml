@@ -12,6 +12,7 @@
   <author>Franka Emika GmbH</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>eigen</build_depend>
 
   <depend>libfranka</depend>
   <depend>controller_interface</depend>
@@ -26,6 +27,7 @@
   <depend>tf2_msgs</depend>
   <depend>tf</depend>
   <depend>std_srvs</depend>
+  <depend>eigen_conversions</depend>
 
   <exec_depend>franka_description</exec_depend>
   <exec_depend>franka_gripper</exec_depend>

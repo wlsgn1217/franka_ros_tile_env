@@ -171,6 +171,24 @@ bool FrankaStateController::init(hardware_interface::RobotHW* robot_hardware,
   }
   trigger_publish_ = franka_hw::TriggerRate(publish_rate);
 
+  // Need access to the model to get the zeroJacobian (needed to calculate Cartesian Velocity)
+  auto* model_interface = robot_hardware->get<franka_hw::FrankaModelInterface>();
+  if (model_interface == nullptr) {
+    ROS_ERROR_STREAM(
+        "FrankaStateController: Error getting model interface from hardware");
+    return false;
+  }
+  try {
+    model_handle_ = std::make_unique<franka_hw::FrankaModelHandle>(
+        model_interface->getHandle(arm_id_ + "_model"));
+  } catch (hardware_interface::HardwareInterfaceException& ex) {
+    ROS_ERROR_STREAM(
+        "FrankaStateController: Exception getting model handle from interface: "
+        << ex.what());
+    return false;
+  }
+
+
   if (!controller_node_handle.getParam("joint_names", joint_names_) ||
       joint_names_.size() != robot_state_.q.size()) {
     ROS_ERROR(
@@ -251,7 +269,14 @@ bool FrankaStateController::init(hardware_interface::RobotHW* robot_hardware,
 void FrankaStateController::update(const ros::Time& time, const ros::Duration& /* period */) {
   if (trigger_publish_()) {
     robot_state_ = franka_state_handle_->getRobotState();
-    publishFrankaStates(time);
+    std::array<double, 42> jacobian_array =
+      model_handle_->getZeroJacobian(franka::Frame::kEndEffector);
+    Eigen::Map<Eigen::Matrix<double, 6, 7>> jacobian(jacobian_array.data());
+    Eigen::Map<Eigen::Matrix<double, 7, 1>> dq(robot_state_.dq.data());
+    Eigen::Matrix<double, 6, 1> ee_vel;
+    ee_vel << jacobian * dq;
+
+    publishFrankaStates(time, ee_vel);
     publishTransforms(time);
     publishExternalWrench(time);
     publishJointStates(time);
@@ -259,8 +284,11 @@ void FrankaStateController::update(const ros::Time& time, const ros::Duration& /
   }
 }
 
-void FrankaStateController::publishFrankaStates(const ros::Time& time) {
+void FrankaStateController::publishFrankaStates(const ros::Time& time, Eigen::Matrix<double, 6, 1> ee_vel) {
   if (publisher_franka_states_.trylock()) {
+    for (size_t i = 0; i < ee_vel.size(); i++) {
+      publisher_franka_states_.msg_.ee_vel[i] = ee_vel[i];
+    }
     static_assert(
         sizeof(robot_state_.cartesian_collision) == sizeof(robot_state_.cartesian_contact),
         "Robot state Cartesian members do not have same size");
